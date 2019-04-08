@@ -3,6 +3,11 @@
 const APIkey = "go61UGTJAaB4tjBG7rxHahuDUNMAi1Bz"
 
 const app = document.getElementById("root");
+// const logo = document.createElement('img');
+//     logo.setAttribute("width", "200px")
+//     logo.src = "./assets/images/giphy_marks/static/Small/light_bg/Poweredby_100px-White_VertLogo.png"
+// app.prepend(logo)
+
 const buttons = document.getElementById("buttons");
 const images = document.getElementById("images");
 const input = document.getElementById("input");
@@ -29,7 +34,18 @@ for (let topic in topics) {
 
 window.onload = function () {
 
-    // initializeInput();
+    initializeInput();
+
+    $(document).on("click", "#new-term-input", function (event) {
+        event.preventDefault();
+        $(this).val("")
+    })
+
+    $(document).on("click", "#new-term-submit", function (event) {
+        event.preventDefault();
+        var newCat = $("#new-term-input").val().trim();
+        newCategory(newCat);
+    })
 
     $(document).on("click", ".btn", function (event) {
         event.preventDefault();
@@ -45,8 +61,10 @@ window.onload = function () {
             for (i = 0; i < response.data.length; i++) {
                 var imgStill = response.data[i].images.fixed_width_still.url;
                 var imgActive = response.data[i].images.fixed_width.url;
+                var title = response.data[i].title;
                 var rating = response.data[i].rating;
-
+                var original = response.data[i].images.original.url;
+                original = "<a target='_blank' href='" + original + "'>click me!</a>"
                 const card = document.createElement("div")
                 card.setAttribute("class", "card col-auto");
 
@@ -59,7 +77,7 @@ window.onload = function () {
 
                 const cardFooter = document.createElement("div")
                 cardFooter.setAttribute("class", "card-footer");
-                ($(cardFooter)).text("rating: " + rating)
+                ($(cardFooter)).html("title: " + title + "<br> rating: " + rating + "<br> original: " + original)
 
                 card.appendChild(imgNow);
                 card.appendChild(cardFooter);
@@ -93,8 +111,10 @@ window.onload = function () {
         }
     })
 
-    var newCat = prompt("new category?")
-    newCategory(newCat);
+    $(document).on("click", "#newCatBtn", function () {
+        var newCat = prompt("new category?")
+        newCategory(newCat);
+    })
     
     function newCategory(newCat) {
         const btn = document.createElement("button");
@@ -109,29 +129,36 @@ window.onload = function () {
         var a = $("<form>");
         a.addClass("form");
         a.attr("action", "");
-        a.text("text");
     
         var b = $("<input>")
         b.addClass("input");
+        b.attr("type", "text")
         b.attr("name", "new-term-input")
-        b.text("input text")
-      
+        b.attr("id", "new-term-input")
+        b.attr("value", "new search term")
+        
         var c = $("<button>")
         c.addClass("button");
+        c.attr("type", "submit")
         c.attr("name", "new-term-submit")
-        c.attr("id", "new-term-button")
+        c.attr("id", "new-term-submit")
         c.text("submit!")
 
-        input.append(a)
-        input.append(b)
-        input.append(c)
+        $("#input").append(a)
+        $("#input").append(b)
+        $("#input").append(c)
       
         // const newTerm = document.createElement("form")
-        //     newTerm.attr("action", "")
+        //     newTerm.setAttribute("action", "")
         // const newTermInput = document.createElement("input")
-        //     ($(newTermInput)).attr("name", "new-term-input")
+        //     newTermInput.setAttribute("name", "new-term-input")
         // const newTermSubmit = document.createElement("button")
-        //     ($(newTermSubmit)).attr("name", "new-term-button")
-        //     ($(newTermSubmit)).text("submit!")
+        //     newTermSubmit.setAttribute("name", "new-term-button")
+        //     newTermSubmit.html("submit!")
+
+        //     console.log(typeof input)
+        // input.appendChild(newTerm)
+        //     input.appendChild(newTermInput)
+        //         input.appendChild(newTermSubmit)
     }
 }
