@@ -1,0 +1,61 @@
+#root {
+    margin: 0 auto;
+    /* flex-direction: column; */
+    text-align: center;
+    box-sizing: border-box;
+    flex-direction: column;
+  }
+  
+
+  .flex-container {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 auto;
+    
+  }
+  
+  .card {
+    background: slategrey;
+    margin: 1rem;
+    border: 1px solid gray;
+    max-width: 300px;
+  }
+  
+  #buttons {
+    margin: 0 auto;
+  }
+
+  #images {
+    max-width: 960px;
+    margin: 0 auto;
+  }
+
+  .img {
+    width: auto;
+    overflow: auto;
+    margin-top: 10px;
+  }
+
+  .btn {
+
+  }
+
+  .card-footer {
+    background:black;
+    color: white;
+    width: auto;
+    margin-top: 5px;
+    margin-bottom: 10px;
+  }
+
+  @media screen and (min-width: 600px) {
+    .card {
+      flex: 1 1 calc(50% - 2rem);
+    }
+  }
+  
+  @media screen and (min-width: 900px) {
+    .card {
+      flex: 1 1 calc(33% - 2rem);
+    }
+  }
