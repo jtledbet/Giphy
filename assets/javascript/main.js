@@ -14,7 +14,7 @@ const input = document.getElementById("input");
 
 var topics = ["puppies", "kittens", "baby sloths"]
 var searchTerm = "default"
-var imageLimit = 10;
+var imageLimit = 12;
 var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + searchTerm + "&api_key=" + APIkey;
 var queryURL = "https://api.giphy.com/v1/gifs/trending?api_key=dc6zaTOxFJmzC&limit=10";
 
@@ -44,6 +44,7 @@ window.onload = function () {
     $(document).on("click", "#new-term-submit", function (event) {
         event.preventDefault();
         var newCat = $("#new-term-input").val().trim();
+        $("#new-term-input").val('')
         newCategory(newCat);
     })
 
