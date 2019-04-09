@@ -12,11 +12,11 @@ const buttons = document.getElementById("buttons");
 const images = document.getElementById("images");
 const input = document.getElementById("input");
 
-var topics = ["animals", "foods", "beverages"]
+var topics = ["puppies", "kittens", "baby sloths"]
 var searchTerm = "default"
+var imageLimit = 10;
 var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + searchTerm + "&api_key=" + APIkey;
 var queryURL = "https://api.giphy.com/v1/gifs/trending?api_key=dc6zaTOxFJmzC&limit=10";
-var imageLimit = 10;
 
 var ajaxOptions = {
     url: queryURL,
@@ -71,13 +71,13 @@ window.onload = function () {
                 const imgNow = document.createElement("img");
                 imgNow.setAttribute("class", "img")
                 imgNow.setAttribute("src", imgStill)
-                imgNow.setAttribute("still-image", imgStill)
+                imgNow.setAttribute("still-image", imgStill)    
                 imgNow.setAttribute("active-image", imgActive)
                 imgNow.setAttribute("state", "still")
 
                 const cardFooter = document.createElement("div")
                 cardFooter.setAttribute("class", "card-footer");
-                ($(cardFooter)).html("title: " + title + "<br> rating: " + rating + "<br> original: " + original)
+                ($(cardFooter)).html("title: " + title + "<br> rating: " + rating.toUpperCase() + "<br> original: " + original)
 
                 card.appendChild(imgNow);
                 card.appendChild(cardFooter);
@@ -93,9 +93,6 @@ window.onload = function () {
         thisImg = $(this);
         var state = thisImg.attr("state")
         console.log("image clicked")
-
-        // thisImg.attr("altsrc", thisImg.attr("src"))
-        // thisImg.attr("src", thisImg.attr("altsrc"))
 
         if (state == "still") {
             thisImg.attr("src", thisImg.attr("active-image"))
@@ -128,25 +125,43 @@ window.onload = function () {
         
         var a = $("<form>");
         a.addClass("form");
+        a.attr("id", "new-term-form")
         a.attr("action", "");
     
-        var b = $("<input>")
+        var b = $("<input>");
         b.addClass("input");
-        b.attr("type", "text")
-        b.attr("name", "new-term-input")
-        b.attr("id", "new-term-input")
-        b.attr("value", "new search term")
+        b.attr("type", "text");
+        b.attr("name", "new-term-input");
+        b.attr("id", "new-term-input");
+        b.attr("value", "new search term");
         
-        var c = $("<button>")
+        var c = $("<input>");
         c.addClass("button");
-        c.attr("type", "submit")
-        c.attr("name", "new-term-submit")
-        c.attr("id", "new-term-submit")
-        c.text("submit!")
+        c.attr("type", "submit");
+        c.attr("name", "new-term-submit");
+        c.attr("id", "new-term-submit");
+        c.text("submit!");
 
-        $("#input").append(a)
-        $("#input").append(b)
-        $("#input").append(c)
+        $("#input").append(a);
+        $("#input").append(b);
+        $("#input").append(c);
+
+        // c.addEventListener("keyup", function () {
+        //     if (event.keyCode == 13) {
+        //         event.preventDefault();
+        //         c.click();
+        //     }
+        // })
+
+        // var input = document.getElementById("#new-term-input");
+        // input.addEventListener("keyup", function(event) {
+
+        // if (event.keyCode === 13) {
+        //     event.preventDefault();
+        //     document.getElementById("#new-term-submit").click();
+        // }
+    }
+
       
         // const newTerm = document.createElement("form")
         //     newTerm.setAttribute("action", "")
@@ -160,5 +175,4 @@ window.onload = function () {
         // input.appendChild(newTerm)
         //     input.appendChild(newTermInput)
         //         input.appendChild(newTermSubmit)
-    }
 }
