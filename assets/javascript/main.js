@@ -109,10 +109,10 @@ window.onload = function () {
         }
     })
 
-    $(document).on("click", "#newCatBtn", function () {
-        var newCat = prompt("new category?")
-        newCategory(newCat);
-    })
+    // $(document).on("click", "#newCatBtn", function () {
+    //     var newCat = prompt("new category?")
+    //     newCategory(newCat);
+    // })
     
     function newCategory(newCat) {
         const btn = document.createElement("button");
