@@ -126,12 +126,12 @@ window.onload = function () {
         
         var a = $("<form>");
         a.addClass("form");
-        a.attr("id", "new-term-form")
+        a.attr("id", "new-term-form");
         a.attr("action", "");
-    
+
         var b = $("<input>");
         b.addClass("input");
-        b.attr("type", "text");
+        b.attr("type", "search");
         b.attr("name", "new-term-input");
         b.attr("id", "new-term-input");
         b.attr("value", "new search term");
@@ -143,37 +143,10 @@ window.onload = function () {
         c.attr("id", "new-term-submit");
         c.text("submit!");
 
+        a.append(b)
+        a.append(c)
+        
+
         $("#input").append(a);
-        $("#input").append(b);
-        $("#input").append(c);
-
-        // c.addEventListener("keyup", function () {
-        //     if (event.keyCode == 13) {
-        //         event.preventDefault();
-        //         c.click();
-        //     }
-        // })
-
-        // var input = document.getElementById("#new-term-input");
-        // input.addEventListener("keyup", function(event) {
-
-        // if (event.keyCode === 13) {
-        //     event.preventDefault();
-        //     document.getElementById("#new-term-submit").click();
-        // }
     }
-
-      
-        // const newTerm = document.createElement("form")
-        //     newTerm.setAttribute("action", "")
-        // const newTermInput = document.createElement("input")
-        //     newTermInput.setAttribute("name", "new-term-input")
-        // const newTermSubmit = document.createElement("button")
-        //     newTermSubmit.setAttribute("name", "new-term-button")
-        //     newTermSubmit.html("submit!")
-
-        //     console.log(typeof input)
-        // input.appendChild(newTerm)
-        //     input.appendChild(newTermInput)
-        //         input.appendChild(newTermSubmit)
 }
