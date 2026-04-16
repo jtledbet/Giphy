@@ -1,152 +1,143 @@
-
-
-const APIkey = "go61UGTJAaB4tjBG7rxHahuDUNMAi1Bz"
-
-const app = document.getElementById("root");
-// const logo = document.createElement('img');
-//     logo.setAttribute("width", "200px")
-//     logo.src = "./assets/images/giphy_marks/static/Small/light_bg/Poweredby_100px-White_VertLogo.png"
-// app.prepend(logo)
+const API_KEY = "go61UGTJAaB4tjBG7rxHahuDUNMAi1Bz";
+const IMAGE_LIMIT = 12;
 
 const buttons = document.getElementById("buttons");
 const images = document.getElementById("images");
-const input = document.getElementById("input");
 
-var topics = ["puppies", "kittens", "baby sloths"]
-var searchTerm = "default"
-var imageLimit = 12;
-var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + searchTerm + "&api_key=" + APIkey;
-var queryURL = "https://api.giphy.com/v1/gifs/trending?api_key=dc6zaTOxFJmzC&limit=10";
+const topics = ["puppies", "kittens", "baby sloths"];
 
-var ajaxOptions = {
+function createTopicButton(topic) {
+  const btn = document.createElement("button");
+  btn.setAttribute("class", "btn btn-dark m-1");
+  btn.setAttribute("type", "button");
+  btn.textContent = topic;
+  buttons.appendChild(btn);
+}
+
+function initializeTopicButtons() {
+  topics.forEach((topic) => createTopicButton(topic));
+}
+
+function renderGifCards(gifs) {
+  images.innerHTML = "";
+
+  gifs.forEach((gif) => {
+    const imgStill = gif.images.fixed_width_still.url;
+    const imgActive = gif.images.fixed_width.url;
+    const title = gif.title || "Untitled";
+    const rating = (gif.rating || "N/A").toUpperCase();
+    const original = gif.images.original.url;
+
+    const card = document.createElement("div");
+    card.setAttribute("class", "card col-auto");
+
+    const imgNow = document.createElement("img");
+    imgNow.setAttribute("class", "img");
+    imgNow.setAttribute("src", imgStill);
+    imgNow.setAttribute("still-image", imgStill);
+    imgNow.setAttribute("active-image", imgActive);
+    imgNow.setAttribute("state", "still");
+    imgNow.setAttribute("alt", `${title} GIF preview`);
+
+    const cardFooter = document.createElement("div");
+    cardFooter.setAttribute("class", "card-footer");
+    cardFooter.innerHTML = `title: ${title}<br>rating: ${rating}<br>original: <a target='_blank' rel='noopener noreferrer' href='${original}'>open</a>`;
+
+    card.appendChild(imgNow);
+    card.appendChild(cardFooter);
+    images.appendChild(card);
+  });
+}
+
+function fetchGifs(searchTerm) {
+  const encodedTerm = encodeURIComponent(searchTerm);
+  const queryURL = `https://api.giphy.com/v1/gifs/search?q=${encodedTerm}&api_key=${API_KEY}&limit=${IMAGE_LIMIT}`;
+
+  $.ajax({
     url: queryURL,
-    method: "GET"
-};
+    method: "GET",
+  }).then((response) => {
+    renderGifCards(response.data || []);
+  });
+}
 
-for (let topic in topics) {
+function newCategory(newCat) {
+  if (!newCat) {
+    return;
+  }
 
-    const btn = document.createElement("button");
-    btn.setAttribute("class", "btn btn-dark");
-    btn.innerHTML = (topics[topic]);
+  const normalized = newCat.trim();
+  if (!normalized) {
+    return;
+  }
 
-    buttons.appendChild(btn)
+  if (topics.includes(normalized)) {
+    return;
+  }
+
+  topics.push(normalized);
+  createTopicButton(normalized);
+}
+
+function initializeInput() {
+  const form = $("<form>", { class: "form", id: "new-term-form", action: "" });
+
+  const input = $("<input>", {
+    class: "input",
+    type: "search",
+    name: "new-term-input",
+    id: "new-term-input",
+    placeholder: "new search term",
+    "aria-label": "Add search term",
+  });
+
+  const submit = $("<input>", {
+    class: "button",
+    type: "submit",
+    name: "new-term-submit",
+    id: "new-term-submit",
+    value: "submit",
+  });
+
+  form.append(input);
+  form.append(submit);
+  $("#input").append(form);
 }
 
 window.onload = function () {
+  initializeInput();
+  initializeTopicButtons();
 
-    initializeInput();
+  $(document).on("click", "#new-term-input", function (event) {
+    event.preventDefault();
+    $(this).val("");
+  });
 
-    $(document).on("click", "#new-term-input", function (event) {
-        event.preventDefault();
-        $(this).val("")
-    })
+  $(document).on("click", "#new-term-submit", function (event) {
+    event.preventDefault();
+    const newCat = $("#new-term-input").val().trim();
+    $("#new-term-input").val("");
+    newCategory(newCat);
+  });
 
-    $(document).on("click", "#new-term-submit", function (event) {
-        event.preventDefault();
-        var newCat = $("#new-term-input").val().trim();
-        $("#new-term-input").val('')
-        newCategory(newCat);
-    })
+  $(document).on("click", ".btn", function (event) {
+    event.preventDefault();
+    const searchTerm = this.textContent;
+    fetchGifs(searchTerm);
+  });
 
-    $(document).on("click", ".btn", function (event) {
-        event.preventDefault();
-        images.innerHTML = "";
+  $(document).on("click", ".img", function (event) {
+    event.preventDefault();
 
-        searchTerm = this.textContent;
-        ajaxOptions.url = "https://api.giphy.com/v1/gifs/search?q=" + searchTerm + "&api_key=go61UGTJAaB4tjBG7rxHahuDUNMAi1Bz&limit=" + imageLimit
-        console.log(searchTerm)
-        console.log(ajaxOptions.url)
+    const thisImg = $(this);
+    const state = thisImg.attr("state");
 
-        $.ajax(ajaxOptions).then(function (response) {
-            console.log(response)
-            for (i = 0; i < response.data.length; i++) {
-                var imgStill = response.data[i].images.fixed_width_still.url;
-                var imgActive = response.data[i].images.fixed_width.url;
-                var title = response.data[i].title;
-                var rating = response.data[i].rating;
-                var original = response.data[i].images.original.url;
-                original = "<a target='_blank' href='" + original + "'>click me!</a>"
-                const card = document.createElement("div")
-                card.setAttribute("class", "card col-auto");
-
-                const imgNow = document.createElement("img");
-                imgNow.setAttribute("class", "img")
-                imgNow.setAttribute("src", imgStill)
-                imgNow.setAttribute("still-image", imgStill)    
-                imgNow.setAttribute("active-image", imgActive)
-                imgNow.setAttribute("state", "still")
-
-                const cardFooter = document.createElement("div")
-                cardFooter.setAttribute("class", "card-footer");
-                ($(cardFooter)).html("title: " + title + "<br> rating: " + rating.toUpperCase() + "<br> original: " + original)
-
-                card.appendChild(imgNow);
-                card.appendChild(cardFooter);
-                images.appendChild(card);
-            }
-
-        })
-    })
-
-    $(document).on("click", ".img", function () {
-        event.preventDefault();
-
-        thisImg = $(this);
-        var state = thisImg.attr("state")
-        console.log("image clicked")
-
-        if (state == "still") {
-            thisImg.attr("src", thisImg.attr("active-image"))
-            thisImg.attr("state", "active")
-
-            var state = thisImg.attr("state")
-        }
-        else if (state == "active") {
-            thisImg.attr("src", thisImg.attr("still-image"))
-            thisImg.attr("state", "still")
-
-            var state = thisImg.attr("state")
-        }
-    })
-
-    // $(document).on("click", "#newCatBtn", function () {
-    //     var newCat = prompt("new category?")
-    //     newCategory(newCat);
-    // })
-    
-    function newCategory(newCat) {
-        const btn = document.createElement("button");
-        btn.setAttribute("class", "btn btn-dark");
-        btn.innerHTML = (newCat);
-
-        buttons.appendChild(btn)
+    if (state === "still") {
+      thisImg.attr("src", thisImg.attr("active-image"));
+      thisImg.attr("state", "active");
+    } else if (state === "active") {
+      thisImg.attr("src", thisImg.attr("still-image"));
+      thisImg.attr("state", "still");
     }
-
-    function initializeInput() {
-        
-        var a = $("<form>");
-        a.addClass("form");
-        a.attr("id", "new-term-form");
-        a.attr("action", "");
-
-        var b = $("<input>");
-        b.addClass("input");
-        b.attr("type", "search");
-        b.attr("name", "new-term-input");
-        b.attr("id", "new-term-input");
-        b.attr("value", "new search term");
-        
-        var c = $("<input>");
-        c.addClass("button");
-        c.attr("type", "submit");
-        c.attr("name", "new-term-submit");
-        c.attr("id", "new-term-submit");
-        c.text("submit!");
-
-        a.append(b)
-        a.append(c)
-        
-
-        $("#input").append(a);
-    }
-}
+  });
+};
