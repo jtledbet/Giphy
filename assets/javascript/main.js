@@ -113,7 +113,7 @@ window.onload = function () {
     $(this).val("");
   });
 
-  $(document).on("click", "#new-term-submit", function (event) {
+  $(document).on("submit", "#new-term-form", function (event) {
     event.preventDefault();
     const newCat = $("#new-term-input").val().trim();
     $("#new-term-input").val("");
